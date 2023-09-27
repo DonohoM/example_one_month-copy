@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="style.css">
+  <title>Ascii Art Converter</title>
+</head>
+<body>
+  <h1>Ascii Art Converter</h1>
+  <p>
+    <input type="file" name="picture" />
+  </p>
+
+  <canvas id="preview"></canvas>
+  <canvas id="result"></canvas>
+
+  <script>
+    const canvas0 = document.getElementById("preview");
+    const context0 = canvas0.getContext("2d");
+    const fileInput = document.querySelector('input[type="file"]');
+
+    
+
+    /*
+    const canvas1 = document.getElementById("result");
+    const content1 = canvas1.getContext("2d");
+    const buttonInput = document.getElementById("DOWNLOADBLE");
+    */
+
+    //const toGrayScale = (r, g, b) => 0.21 * r + 0.72 * g + 0.07 * b;
+    function grey(input) {
+      context0.drawImage(input, 0, 0);
+      var width = input.width;
+      var height = input.height;
+      var imgPixels = context0.getImageData(0, 0, width, height);
+      for(var y = 0; y < height; y++){
+        document.write("<pre style=\"font-size:3px; font-family:monospace; font-weight:bold;\">");
+        for(var x = 0; x < width; x++){
+          var i = (y * 4) * width + x * 4;
+
+          //The average is the average color of the selected pixel
+
+          var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
+          imgPixels.data[i] = avg;
+          imgPixels.data[i + 1] = avg;
+          imgPixels.data[i + 2] = avg;
+
+          //Try to relate the average color into a ascii character
+          const grayRamp =
+          "Ñ@#W$9876543210?!abc;:+=-,._ ";
+
+          const getCharacterForGrayScale = avg =>
+          grayRamp[Math.ceil(((grayRamp.length - 1) * avg) / 255)];
+              
+          //console.log();
+          //context0.fillText(getCharacterForGrayScale(avg), x, y);
+
+          /*
+          document.write(getCharacterForGrayScale(avg));
+          document.write(getCharacterForGrayScale(avg));
+          document.write(getCharacterForGrayScale(avg));
+          document.write(getCharacterForGrayScale(avg));
+          */
+        }
+        //document.write("</pre>");
+      }
+      context0.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+    }
+
+    //CREATE A DOWNLOADBLE ASCII IMG VERSION OF THE IMG INPUT
+
+    document.write("</div>");
+
+    fileInput.onchange = e => {
+      //Handling the single file upload
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = event => {
+        const image = new Image();
+        image.onload = () => {
+          
+          if(image.height > image.width){         
+            canvas0.height = image.height/image.width * 300;
+            canvas0.width = 300
+          }else if (image.width > image.height){
+	          canvas0.width = image.width/image.height * 300;
+	          canvas0.height = 300;
+          } else {
+	          canvas0.width = 300;
+	          canvas0.height = 300;
+          }
+          
+          //fileInput.height = canvas0.height;
+          //fileInput.width = canvas0.width;
+
+          //canvas0.width = image.width;
+          //canvas0.height = image.height;
+
+          //context0.fillRect(0, 0, canvas0.width, canvas0.height);
+          /*
+          var textToSave = 'this is a test';
+          var hiddenElement = document.createElement('a');
+          hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+          hiddenElement.target = '_blank';
+          hiddenElement.download = 'myFile.txt';
+          hiddenElement.click();
+          */
+          context0.drawImage(image, 0, 0, canvas0.width, canvas0.height);
+          grey(image);
+        };
+        image.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    };
+      
+  </script>
+
+  <p>
+    <input type="button" id="downloadBtn" value="Download">
+  </p>
+  <script>
+    function downloadImage() {
+      let canvas = document.getElementById("canvas");
+
+      var dataURl = canvas.toDataURL("image/png");
+
+      var a = document.createElement('a');
+
+      a.href = dataURL;
+
+      a.download = 'canvas-download.jpeg';
+
+      a.click();
+    }
+
+    let download = document.getElementById('dowbloadBtn');
+    //download.addEventListener('click', downloadImage);
+  </script>
+
+</body>
+</html>

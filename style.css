@@ -1,0 +1,21 @@
+/* Container for title and image */
+.title-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.main-container {
+    background-color: #0077C8;
+    color: white;
+    padding: 20px;
+}
+
+pre {
+    font-family: monospace;
+    font-size: 15px;
+}
+
+h1 {
+    color: red;
+}
